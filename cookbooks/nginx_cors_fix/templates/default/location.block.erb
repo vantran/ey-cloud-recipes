@@ -1,3 +1,6 @@
   location ~ ^/(assets|stylesheets)/ {
     add_header Access-Control-Allow-Origin *;
+    add_header Access-Control-Allow-Headers *;
+    add_header Access-Control-Request-Method 'GET, POST, OPTIONS';
+    add_header Access-Control-Max-Age 1728000;
   }
