@@ -11,14 +11,16 @@ if ['util'].include?(node[:instance_role])
     elasticsearch_instances = []
     elasticsearch_expected = 0
     node['utility_instances'].each do |elasticsearch|
-      if elasticsearch['name'].include?("elasticsearch_")
+      # if elasticsearch['name'].include?("elasticsearch_")
+      if elasticsearch['name'] == 'utility'
         elasticsearch_expected = elasticsearch_expected + 1 unless node['fqdn'] == elasticsearch['hostname']
         elasticsearch_instances << "#{elasticsearch['hostname']}:9300" unless node['fqdn'] == elasticsearch['hostname']
       end
     end
   end
 
-  if node['name'].include?("elasticsearch_")
+  # if node['name'].include?("elasticsearch_")
+  if node['name'] == 'utility'
     Chef::Log.info "Downloading Elasticsearch v#{node[:elasticsearch_version]} checksum #{node[:elasticsearch_checksum]}"
     remote_file "/tmp/elasticsearch-#{node[:elasticsearch_version]}.zip" do
       source "http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-#{node[:elasticsearch_version]}.zip"
@@ -169,7 +171,8 @@ end
 if ['solo','app_master','app','util'].include?(node[:instance_role])
   elasticsearch_hosts = []
   node['utility_instances'].each do |elasticsearch|
-    if elasticsearch['name'].include?("elasticsearch_")
+    # if elasticsearch['name'].include?("elasticsearch_")
+    if elasticsearch['name'] == 'utility'
       elasticsearch_hosts << "#{elasticsearch['hostname']}:9200"
     end
 

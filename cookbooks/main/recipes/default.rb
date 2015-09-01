@@ -100,7 +100,7 @@ include_recipe "redis"
 #include_recipe "mysql_administrative_tools"
 
 #uncomment to include the Elasticsearch recipe
-#include_recipe "elasticsearch"
+include_recipe "elasticsearch"
 
 #uncomment to include the Elasticsearch recipe on solos and app masters
 #include_recipe "elasticsearch::non_util"
