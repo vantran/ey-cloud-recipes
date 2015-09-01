@@ -100,10 +100,10 @@ include_recipe "redis"
 #include_recipe "mysql_administrative_tools"
 
 #uncomment to include the Elasticsearch recipe
-include_recipe "elasticsearch"
+# include_recipe "elasticsearch"
 
 #uncomment to include the Elasticsearch recipe on solos and app masters
-#include_recipe "elasticsearch::non_util"
+include_recipe "elasticsearch::non_util"
 
 # To install specific plugins to Elasticsearch see below as an example
 #es_plugin "cloud-aws" do
