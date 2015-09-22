@@ -19,7 +19,9 @@ default[:sidekiq] = {
   # Queues
   :queues => {
     # :queue_name => priority
-    :default => 1
+    :default => 1,
+    :mailers => 1,
+    :searchkick => 1
   },
   
   # Verbose
