@@ -1,11 +1,11 @@
 <%= @environment %>:
-  sessions:
+  clients:
     default:
       hosts:
       <% @hosts.each do |host, port| -%>
         - <%= host %>:<%= port %>
       <% end -%> 
-      database: <%=@mongo_replsetname%>
+      database: <%=@database%>
   # Mongoid specific configuration options
   options:
   consistency: :eventual

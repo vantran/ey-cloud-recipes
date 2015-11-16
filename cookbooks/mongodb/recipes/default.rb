@@ -29,7 +29,8 @@ else
     end
   end
 
-  # Setup an arbiter on the db_master|solo as replica sets need another vote to properly failover.  If you have a Replica set > 3 nodes we don't set this up, you can tune this obviously.
+  # Setup an arbiter on the db_master|solo as replica sets need another vote to properly failover.
+  # If you have a Replica set > 3 nodes we don't set this up, you can tune this obviously.
   if (['db_master','solo'].include?(@node[:instance_role]) &&  @node[:mongo_utility_instances].length == 2)
     Chef::Log.info "Setting up Mongo in db_master or solo"
     include_recipe "mongodb::install"
