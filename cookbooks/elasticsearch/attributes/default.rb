@@ -1,5 +1,5 @@
-default[:elasticsearch_version] = "1.4.4"
-default[:elasticsearch_checksum] = "52f40875c7bf5b93252017ce2cd0f779ca2c51fd"
+default[:elasticsearch_version] = "2.2.0"
+default[:elasticsearch_checksum] = "79c18ec9af1c3fc2ef0d168c23ab8a7696fcc123"
 default[:elasticsearch_clustername] = "#{node[:environment][:name]}"
 default[:elasticsearch_home] = "/data/elasticsearch"
 default[:elasticsearch_s3_gateway_bucket] = "elasticsearch_#{node[:environment][:name]}"
