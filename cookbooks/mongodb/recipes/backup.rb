@@ -7,10 +7,10 @@ ey_cloud_report "mongodb" do
   message "configuring backup"
 end
 
-# mongo_nodes = @node[:utility_instances].select { |instance| instance[:name].match(/^mongodb_repl#{@node[:mongo_replset]}/) }
-mongo_nodes = @node[:utility_instances].select { |instance| instance[:name].match(/^mongodb/) }
+# mongo_nodes = node[:utility_instances].select { |instance| instance[:name].match(/^mongodb_repl#{node[:mongo_replset]}/) }
+mongo_nodes = node[:utility_instances].select { |instance| instance[:name].match(/^mongodb/) }
 
-if @node[:name] == mongo_nodes.last[:name]
+if node[:name] == mongo_nodes.last[:name]
   app_name = "lixibox"
   user = node[:users].first
   db_name = "#{app_name}_#{node[:environment][:framework_env]}"
