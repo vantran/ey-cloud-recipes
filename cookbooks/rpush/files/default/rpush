@@ -1,0 +1,36 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          rpush
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Interactive:     false
+# Short-Description: Rpush init script
+# Description:       Rpush init script
+### END INIT INFO
+
+DESC="Service for Lixibox Rpush"
+NAME=rpush
+APP_ROOT=/data/lixibox/current
+
+do_start()
+{
+   cd $APP_ROOT && bundle exec rpush start -e production
+   echo "starting!";
+}
+
+do_stop()
+{
+   cd $APP_ROOT && bundle exec rpush stop -e production
+   echo "stopping!"
+}
+
+case "$1" in
+   start)
+     do_start
+     ;;
+   stop)
+     do_stop
+     ;;
+esac

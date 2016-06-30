@@ -1,0 +1,6 @@
+check process rpush_<%= @app_name %>
+  with pidfile /var/run/engineyard/rpush/<%= @app_name %>/rpush.pid
+  start program = "/data/<%= @app_name %>/shared/bin/rpush start"
+  stop program = "/data/<%= @app_name %>/shared/bin/rpush stop"
+  if totalmem is greater than 200 MB for 2 cycles then restart # eating up memory?
+  group <%= @app_name %>_rpush
