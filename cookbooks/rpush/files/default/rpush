@@ -10,27 +10,48 @@
 # Description:       Rpush init script
 ### END INIT INFO
 
+# must be root
+if [[ "$(whoami)" != "root" ]]; then
+  echo "Must be run as root"
+  exit 1
+fi
+
+# Get arguments
+APP_NAME="$1"
+COMMAND="$2"
+ENVIRONMENT="$3"
+
+# Config params
 DESC="Service for Lixibox Rpush"
 NAME=rpush
 APP_ROOT=/data/lixibox/current
+PID_DIR="/var/run/engineyard/rpush/${APP_NAME}"
+PID_FILE="${PID_DIR}/rpush.pid"
+CONFIG_FILE="${APP_ROOT}/config/initializers/rpush.rb"
+APP_USER=$(stat -L -c"%U" "${APP_ROOT}")
+RPUSH="${APP_ROOT}/ey_bundler_binstubs/rpush"
 
-do_start()
+export HOME="/home/${APP_USER}"
+cd "${APP_ROOT}"
+
+start()
 {
-   cd $APP_ROOT && bundle exec rpush start -e production
-   echo "starting!";
+  sudo -u "${APP_USER}" -H "${RPUSH}" start -c "${CONFIG_FILE}" -e "${ENVIRONMENT}" -p "${PID_FILE}" &
+  exit $?
 }
 
-do_stop()
+stop()
 {
-   cd $APP_ROOT && bundle exec rpush stop -e production
-   echo "stopping!"
+  sudo -u "${APP_USER}" -H "${RPUSH}" stop -c "${CONFIG_FILE}" -e "${ENVIRONMENT}" -p "${PID_FILE}" &
+  exit $?
 }
 
-case "$1" in
-   start)
-     do_start
-     ;;
-   stop)
-     do_stop
-     ;;
+# Execute
+case $COMMAND in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
 esac
