@@ -2,7 +2,7 @@
 # Cookbook Name:: rpush
 # Recipe:: default
 #
-if ['solo', 'util'].include?(node[:instance_role])
+if node[:name] == "utility"
   node[:applications].each do |app, data|
     template "/etc/monit.d/rpush_#{app}.monitrc" do
       owner 'root'
