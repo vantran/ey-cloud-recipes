@@ -5,9 +5,9 @@ case $1 in
      echo $$ > /var/run/mms.pid;
      exec 2>&1 /usr/bin/python /db/mms/mms-agent/agent.py > /db/mms/agent.log 2>&1
      ;;
-   stop)  
+   stop)
      kill `cat /var/run/mms.pid` ;;
-   *)  
+   *)
      echo "usage: mms.sh {start|stop}" ;;
 esac
 exit 0

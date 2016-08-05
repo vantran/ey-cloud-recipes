@@ -58,7 +58,7 @@ mongodb_options = { :exec => "#{mongodb_bin}/mongod",
                     :log_path => mongo_log,
                     :user => user[:username],
                     :pid_path => "/var/run/mongodb",
-                    :ip => "0.0.0.0",
+                    :ip => "172.31.10.159",
                     :port => @node[:mongo_port],
                     :extra_opts => '' }
 
@@ -88,13 +88,14 @@ template "/etc/conf.d/mongodb" do
   })
 end
 
-execute "enable-mongodb" do
+execute "enable mongodb" do
   command "rc-update add mongodb default"
   action :run
 end
 
-execute "/etc/init.d/mongodb restart" do
+execute "start mongodb" do
   command "/etc/init.d/mongodb restart"
   action :run
+  not_if "/etc/init.d/mongodb status"
 end
 
