@@ -40,7 +40,9 @@ if node[:utility_instances].empty?
       group user[:username]
       mode 0755
 
-      hosts = ["172.31.10.159:#{@node[:mongo_port].to_i}"]
+      if @node[:mongo_utility_instances].any?
+        hosts = @node[:mongo_utility_instances].select{ |mui| mui[:name] == 'mongodb' }.map { |mui| [ mui[:hostname], @node[:mongo_port].to_i ] }
+      end
 
       replica_set = @node[:mongo_utility_instances].any? { |instance| instance[:name].match(/^mongodb_repl/) }
       if replica_set
