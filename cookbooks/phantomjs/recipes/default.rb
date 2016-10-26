@@ -4,9 +4,9 @@
 #
 #
 
-folder_name = "phantomjs-1.9.2-linux-x86_64"
+folder_name = "phantomjs-2.1.1-linux-x86_64"
 file_name = "#{folder_name}.tar.bz2"
-url = "https://phantomjs.googlecode.com/files/#{file_name}"
+url = "https://bitbucket.org/ariya/phantomjs/downloads/#{file_name}"
 
 if ['solo','app_master','app','util'].include?(node[:instance_role])
   remote_file "/tmp/#{file_name}" do
