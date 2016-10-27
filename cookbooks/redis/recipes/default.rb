@@ -4,7 +4,7 @@
 #
 
 if ['util'].include?(node[:instance_role])
-  if node[:name] == 'utility'
+  if node[:name] == 'utility' || node[:name] == 'redis'
 
     sysctl "Enable Overcommit Memory" do
       variables 'vm.overcommit_memory' => 1
@@ -29,11 +29,17 @@ if ['util'].include?(node[:instance_role])
       action :create
     end
 
+    conf_source = if node[:name] == "utility"
+      "redis_util.conf.erb"
+    else
+      "redis.conf.erb"
+    end
+
     template "/etc/redis_util.conf" do
       owner 'root'
       group 'root'
       mode 0644
-      source "redis.conf.erb"
+      source conf_source
       variables({
         :pidfile => node[:redis][:pidfile],
         :basedir => node[:redis][:basedir],
@@ -78,22 +84,30 @@ if ['util'].include?(node[:instance_role])
   end
 end
 
+# for all server, add hosts mapping for redis & utility
 if ['solo', 'app', 'app_master', 'util'].include?(node[:instance_role])
   instances = node[:engineyard][:environment][:instances]
-  redis_instance = (node[:instance_role][/solo/] && instances.length == 1) ? instances[0] : instances.find{|i| i[:name].to_s[/utility/]}
 
-  if redis_instance
-    ip_address = `ping -c 1 #{redis_instance[:private_hostname]} | awk 'NR==1{gsub(/\\(|\\)/,"",$3); print $3}'`.chomp
-    host_mapping = "#{ip_address} redis_instance"
-
-    execute "Remove existing redis_instance mapping from /etc/hosts" do
-      command "sudo sed -i '/redis_instance/d' /etc/hosts"
-      action :run
+  ["redis", "utility"].each do |server_name|
+    redis_instance = if node[:instance_role][/solo/] && instances.length == 1
+      instances[0]
+    else
+      instances.find{|i| i[:name] == server_name}
     end
 
-    execute "Add redis_instance mapping to /etc/hosts" do
-      command "sudo echo #{host_mapping} >> /etc/hosts"
-      action :run
+    if redis_instance
+      ip_address = `ping -c 1 #{redis_instance[:private_hostname]} | awk 'NR==1{gsub(/\\(|\\)/,"",$3); print $3}'`.chomp
+      host_mapping = "#{ip_address} #{server_name}_instance"
+
+      execute "Remove existing redis_instance mapping from /etc/hosts" do
+        command "sudo sed -i '/#{server_name}_instance/d' /etc/hosts"
+        action :run
+      end
+
+      execute "Add #{server_name}_instance mapping to /etc/hosts" do
+        command "sudo echo #{host_mapping} >> /etc/hosts"
+        action :run
+      end
     end
   end
 end
