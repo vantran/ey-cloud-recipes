@@ -152,12 +152,17 @@ if ['util'].include?(node[:instance_role])
       backup 0
     end
 
-    template "/etc/monit.d/elasticsearch_#{node[:elasticsearch_clustername]}.monitrc" do
-      source "elasticsearch.monitrc.erb"
-      owner "elasticsearch"
-      group "nogroup"
-      backup 0
-      mode 0644
+    node[:applications].each do |app_name, data|
+      template "/etc/monit.d/elasticsearch_#{node[:elasticsearch_clustername]}.monitrc" do
+        source "elasticsearch.monitrc.erb"
+        owner "elasticsearch"
+        group "nogroup"
+        backup 0
+        mode 0644
+        variables({
+          :app_name => app_name
+        })
+      end
     end
 
     # Tell monit to just reload, if elasticsearch is not running start it.  If it is monit will do nothing.
