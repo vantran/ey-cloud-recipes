@@ -6,7 +6,7 @@
 
 include_recipe "nginx_cors_fix"
 include_recipe "phantomjs"
-include_recipe "rpush"
+# include_recipe "rpush"
 
 # uncomment to deny access to /log, /config, and .git directories as well as any .yml files
 # include_recipe "deny-directories"
