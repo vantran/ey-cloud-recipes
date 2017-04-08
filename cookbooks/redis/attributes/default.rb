@@ -1,5 +1,6 @@
 default[:redis] = {
-  :version => "2.6.16",
+  :utility_name => "redis",
+  :version => "3.2.3",
   :bindport => "6379",
   :unixsocket => "/tmp/redis.sock",
   :basename => "dump.rdb",

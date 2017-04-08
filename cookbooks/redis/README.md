@@ -14,7 +14,7 @@ Design
 * 1+ utility instances
 * over-commit is enabled by default to ensure the least amount of problems saving your database.
 * 64-bit is required for storing over 2gigabytes worth of keys.
-* /etc/hosts mapping for `redis_instance` so that a hard config can be used to connect
+* /etc/hosts mapping for `redis-instance` so that a hard config can be used to connect
 
 Backups
 --------
@@ -24,28 +24,39 @@ This cookbook does not automate nor facilitate any backup method currently.  By 
 Specifics of Usage
 --------
 
-Simply add a utility instance named `redis` and the recipe will use that instance for redis.
+Simply add a utility instance named `redis` and the recipe will use that instance for redis. If the utility instance you wish to use redis on isn't called `redis`, update redis/attributes/default.rb with the correct instance name:
+
+```ruby
+default[:redis] = {
+  :utility_name => "my_custom_name", # default: redis
+  # ...
+}
+```
 
 Changing Defaults
 --------
 
-A large portion of the defaults of this recipe have been moved to a attribute file; if you need to change how often you save; review the attribute file and modify.
+A large portion of the defaults of this recipe have been moved to the `attributes/default.rb` file. If you need to change how often you save, review the attribute file and modify.
 
 Installation
 --------
 
-Ensure you have the Dependencies installed in your local cookbooks repository ...
 Add the following to your main/recipes/default.rb
 
 ``include_recipe "redis"``
 
 Choosing a different Redis version
 --------
-This recipe installs Redis 2.6.16 by default. To install Redis 2.4.17 or Redis 2.8.13:
+This recipe installs Redis 3.2.3 by default. For Redis 2.x we do not recommend versions earlier than Redis 2.8.21, and for Redis 3.x we do not recommend versions earlier than 3.0.2. These versions have a known vulnerability: http://benmmurphy.github.io/blog/2015/06/04/redis-eval-lua-sandbox-escape/
 
-1. Change the `:version => "2.6.16",` line in `attributes/default.rb` to the version you want to install
-2. Copy over the corresponding `redis-2.x.conf.erb` file to `templates/default/redis.conf.erb`
+To install a different version of Redis, change the `:version => "3.2.3",` line in `attributes/default.rb` to the version you want to install. If you're upgrading to a newer version, please see the "Upgrading" section below.
 
+Upgrading from a previous Redis version
+--------
+
+Before upgrading, please review the Redis release notes for the version you're upgrading to, to ensure compatibility with your current Redis data. Also ensure that you remove the `/data/redis-source` directory - the recipe skips downloading and installing a new version if this directory is present.
+
+After upgrading, Redis server will be installed to `/usr/local/bin/redis-server`. However, the old version of Redis will still be running. Please run `sudo monit restart redis-1` to restart Redis.
 
 Notes
 ------
