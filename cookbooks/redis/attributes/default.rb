@@ -1,5 +1,5 @@
 default[:redis] = {
-  :utility_name => "redis",
+  :utility_name => ["redis", "utility"],
   :version => "3.2.3",
   :bindport => "6379",
   :unixsocket => "/tmp/redis.sock",

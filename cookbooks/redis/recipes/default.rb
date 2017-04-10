@@ -10,7 +10,7 @@ redis_installer_directory = '/opt/redis-source'
 bin_path = '/usr/local/bin'
 
 if ['util'].include?(node[:instance_role])
-  if node[:name] == node[:redis][:utility_name]
+  if node[:redis][:utility_name].include?(node[:name])
 
     sysctl "Enable Overcommit Memory" do
       variables 'vm.overcommit_memory' => 1
@@ -94,7 +94,7 @@ end
 
 if ['solo', 'app', 'app_master', 'util'].include?(node[:instance_role])
   instances = node[:engineyard][:environment][:instances]
-  redis_instance = (node[:instance_role][/solo/] && instances.length == 1) ? instances[0] : instances.find{|i| "redis" == i[:name]}
+  redis_instance = (node[:instance_role][/solo/] && instances.length == 1) ? instances[0] : instances.find{|i| node[:redis][:utility_name].include?(i[:name])}
 
   if redis_instance
     ip_address = `ping -c 1 #{redis_instance[:private_hostname]} | awk 'NR==1{gsub(/\\(|\\)/,"",$3); print $3}'`.chomp
